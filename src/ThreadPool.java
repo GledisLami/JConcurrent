@@ -6,18 +6,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ThreadPool {
-    /*
-    * We need a number of threads
-    * A queue that handles locking of shared resources
-    * BlockingQueue
-    * ExecutorService for instantiation
-     */
-
     private final int numThreads;
     private final ExecutorService executor;
     private final BlockingQueue<Task> taskQueue;
 
-    public ThreadPool(int numThreads){
+    protected ThreadPool(int numThreads){
         this.numThreads = numThreads;
         executor = Executors.newFixedThreadPool(numThreads);
         taskQueue = new LinkedBlockingQueue<>();

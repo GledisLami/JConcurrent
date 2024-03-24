@@ -54,6 +54,7 @@ public class SequentialTask implements DependencyTask {
         }
 
         task.run();
+        notifyCompletion();
     }
 
 }

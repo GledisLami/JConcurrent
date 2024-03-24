@@ -1,7 +1,5 @@
 package implementations;
 
-import interfaces.CallablePeriodicTask;
-import interfaces.CallableTask;
 import interfaces.PeriodicTask;
 import interfaces.Task;
 
