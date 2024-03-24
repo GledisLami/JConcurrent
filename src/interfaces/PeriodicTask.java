@@ -16,6 +16,4 @@ public interface PeriodicTask {
      */
     ScheduledFuture<?> schedulePeriodicTask(long initialDelay, long period, TimeUnit unit, Task task);
 
-    <T> ScheduledFuture<?> schedulePeriodicTask(long initialDelay, long period, TimeUnit unit, CallableTask<T> task);
-
 }
