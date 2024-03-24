@@ -1,3 +1,5 @@
+package executors;
+
 import interfaces.Task;
 
 import java.util.concurrent.BlockingQueue;
@@ -9,12 +11,13 @@ public class ThreadPool {
     private final int numThreads;
     private final ExecutorService executor;
     private final BlockingQueue<Task> taskQueue;
+    private volatile boolean running;
 
     protected ThreadPool(int numThreads){
         this.numThreads = numThreads;
         executor = Executors.newFixedThreadPool(numThreads);
         taskQueue = new LinkedBlockingQueue<>();
-
+        running = true;
         // Start worker threads
         for (int i = 0; i < numThreads; i++){
             executor.execute(this::workerLoop);
@@ -22,7 +25,7 @@ public class ThreadPool {
     }
 
     private void workerLoop(){
-        while (true){
+        while (running){
             try {
                 /*
                 * taskQueue.take() calls until a task becomes available in the queue.
@@ -51,6 +54,7 @@ public class ThreadPool {
     }
 
     public void shutdown(){
+        running = false;
         executor.shutdown();
     }
 
