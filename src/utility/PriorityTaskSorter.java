@@ -2,6 +2,7 @@ package utility;
 
 import interfaces.PriorityTask;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -13,5 +14,11 @@ public class PriorityTaskSorter {
 
         // Sort the list of tasks using the custom Comparator
         Collections.sort(tasks, priorityComparator);
+    }
+
+    public static void sortByPriority(PriorityTask... tasks){
+        Comparator<PriorityTask> priorityComparator = Comparator.comparingInt(PriorityTask::getPriority).reversed();
+
+        Arrays.sort(tasks, priorityComparator);
     }
 }
