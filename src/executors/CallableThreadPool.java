@@ -1,20 +1,23 @@
 package executors;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ThreadPool {
+public class CallableThreadPool<T> {
     private final int numThreads;
     private final ExecutorService executor;
-    private final BlockingQueue<Runnable> taskQueue;
+    private final BlockingQueue<Callable<T>> taskQueue;
+    private final BlockingQueue<T> resultsQueue;
     private volatile boolean running;
 
-    protected ThreadPool(int numThreads){
+    protected CallableThreadPool(int numThreads){
         this.numThreads = numThreads;
         executor = Executors.newFixedThreadPool(this.numThreads);
         taskQueue = new LinkedBlockingQueue<>();
+        resultsQueue = new LinkedBlockingQueue<>();
         running = true;
         // Start worker threads
         for (int i = 0; i < numThreads; i++){
@@ -33,32 +36,28 @@ public class ThreadPool {
                 *  when the queue is empty
                 *
                  */
-                Runnable task = taskQueue.take();
-                
-                try{
-                    task.run();    
-                } catch(RuntimeException e){
-                    handleException(e);
-                }
-                
-            }
-            catch (InterruptedException e){
+                Callable<T> task = taskQueue.take();
+                T result = task.call();  
+                resultsQueue.put(result);                 
+            } catch (InterruptedException e){
                 Thread.currentThread().interrupt();
                 break;
+            } catch (Exception e){
+                e.printStackTrace();
             }
         }
     }
 
-    private void handleException(Exception e){
-        e.printStackTrace();
-    }
-
-    public void submitTask(Runnable task){
+    public void submitTask(Callable<T> task){
         try {
             taskQueue.put(task);
         } catch (InterruptedException e){
             Thread.currentThread().interrupt();
         }
+    }
+
+    public T getResult() throws InterruptedException{
+        return resultsQueue.take();
     }
 
     public void shutdown(){
