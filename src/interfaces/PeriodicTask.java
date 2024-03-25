@@ -14,6 +14,6 @@ public interface PeriodicTask {
      * @param task the logic of the task to execute
      * @return a ScheduledFuture representing the periodic task
      */
-    ScheduledFuture<?> schedulePeriodicTask(long initialDelay, long period, TimeUnit unit, Task task);
+    ScheduledFuture<?> schedulePeriodicTask(long initialDelay, long period, TimeUnit unit, Runnable task);
 
 }

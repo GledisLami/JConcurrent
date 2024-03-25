@@ -1,5 +1,5 @@
 package interfaces;
 
-public interface PriorityTask extends Task{
+public interface PriorityTask extends Runnable{
     int getPriority();
 }

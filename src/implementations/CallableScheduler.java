@@ -1,8 +1,8 @@
 package implementations;
 
 import interfaces.CallablePeriodicTask;
-import interfaces.CallableTask;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -20,7 +20,7 @@ public class CallableScheduler implements CallablePeriodicTask {
     }
 
     @Override
-    public <T> ScheduledFuture<?> schedulePeriodicTask(long initialDelay, long period, TimeUnit unit, CallableTask<T> task) {
+    public <T> ScheduledFuture<?> schedulePeriodicTask(long initialDelay, long period, TimeUnit unit, Callable<T> task) {
         return scheduler.scheduleAtFixedRate(() -> {
             try {
                 task.call();

@@ -1,11 +1,11 @@
 package executors;
 
-import interfaces.AsyncTask;
-import interfaces.Task;
-
-import java.util.concurrent.CompletableFuture;
-
 public class TaskExecutor {
+    /*
+     * TaskExecutor class that instatiates a ThreadPool object with a specific or default number of threads
+     * Works as an abstraction of the ThreadPool, to keep concerns separate
+     * Can submit a Task or an array of Tasks
+     */
     private final ThreadPool threadPool;
 
     public TaskExecutor(int numThreads) {
@@ -16,7 +16,7 @@ public class TaskExecutor {
         this.threadPool = new ThreadPool(1);
     }
 
-    public void submitTask(Task task) {
+    public void submitTask(Runnable task) {
         try {
             threadPool.submitTask(task);
         } catch (Exception e){
@@ -28,34 +28,14 @@ public class TaskExecutor {
         threadPool.shutdown();
     }
 
-    private void handleTaskError(Task task, Exception e){
+    private void handleTaskError(Runnable task, Exception e){
         System.err.println("Error occurred while executing task: " + task);
         e.printStackTrace();
     }
 
-    public void submitTasks(Task... tasks){
-        for (Task task: tasks){
+    public void submitTasks(Runnable... tasks){
+        for (Runnable task: tasks){
             submitTask(task);
         }
-    }
-
-    public <T> CompletableFuture<T> executeAsync(AsyncTask<T> asyncTask) {
-        CompletableFuture<T> future = new CompletableFuture<>();
-        CompletableFuture<T> taskFuture = asyncTask.executeAsync();
-
-        // Handle task completion
-        taskFuture.whenComplete((result, throwable) -> {
-            if (throwable != null) {
-                future.completeExceptionally(throwable); // Propagate exception
-            } else {
-                future.complete(result); // Propagate result
-            }
-        });
-
-        return future;
-    }
-
-    public void cancelAsync(CompletableFuture<?> future) {
-        future.cancel(true); // Cancel the task if possible
     }
 }

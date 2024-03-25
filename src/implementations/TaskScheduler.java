@@ -1,7 +1,6 @@
 package implementations;
 
 import interfaces.PeriodicTask;
-import interfaces.Task;
 
 import java.util.concurrent.*;
 
@@ -19,7 +18,7 @@ public class TaskScheduler implements PeriodicTask{
     }
 
     @Override
-    public ScheduledFuture<?> schedulePeriodicTask(long initialDelay, long period, TimeUnit unit, Task task) {
+    public ScheduledFuture<?> schedulePeriodicTask(long initialDelay, long period, TimeUnit unit, Runnable task) {
         return scheduler.scheduleAtFixedRate(() -> {
             task.run();
         }, initialDelay, period, unit);

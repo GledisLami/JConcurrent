@@ -1,7 +1,6 @@
 package implementations;
 
 import interfaces.DependencyTask;
-import interfaces.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +9,9 @@ public class SequentialTask implements DependencyTask {
     private final List<DependencyTask> dependencies;
     private int completedDependencies;
     private boolean isCompleted;
-    private final Task task;
+    private final Runnable task;
 
-    public SequentialTask(Task task) {
+    public SequentialTask(Runnable task) {
         this.dependencies = new ArrayList<>();
         this.completedDependencies = 0;
         this.isCompleted = false;
